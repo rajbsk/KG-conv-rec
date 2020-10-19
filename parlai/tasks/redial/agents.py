@@ -114,7 +114,7 @@ class RedialTeacher(DialogTeacher):
             messages = instance["messages"]
             message_idx = 0
             new_episode = True
-
+            dialog_text = ""
             previously_mentioned_movies_list = []
             mentioned_entities = []
             turn = 0
@@ -143,6 +143,7 @@ class RedialTeacher(DialogTeacher):
                         target_mentioned_entities += self._get_entities(tgt)
                     source_text = '\n'.join(source_text)
                     target_text = '\n'.join(target_text)
+                    dialog_text += source_text[:] + "\t"
                     source_text, source_movie_list = self._convert_ids_to_indices(
                         source_text, instance["initiatorQuestions"]
                     )
@@ -152,6 +153,7 @@ class RedialTeacher(DialogTeacher):
                     turn += 1
                     yield (source_text, [target_text], None, [str(turn), ' '.join(previously_mentioned_movies_list + source_movie_list), ' '.join(target_movie_list), ' '.join(mentioned_entities), target_text], None), new_episode
                     new_episode = False
+                    dialog_text += target_text[:] + "\t"
                     previously_mentioned_movies_list += source_movie_list + target_movie_list
                     mentioned_entities += target_mentioned_entities
 

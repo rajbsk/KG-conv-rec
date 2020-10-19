@@ -137,3 +137,19 @@ heroku-cli-*
 logs.pdf
 
 saved/
+models/
+result/
+data_2/
+data_3/
+data_5/
+data_pp/
+data_pp7/
+data_pp9/
+data.zip
+result_auto.txt
+result_dbpediapp3.txt
+result_dbpediapp37.txt
+result_dbpediapp39.txt
+result_no_pos.txt
+result_pr7.txt
+word_embeddings.txt

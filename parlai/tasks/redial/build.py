@@ -134,14 +134,15 @@ def build(opt):
     version = None
 
     # check if data had been previously built
-    if not build_data.built(dpath, version_string=version):
+    # if not build_data.built(dpath, version_string=version):
+    if False:
         print("[building data: " + dpath + "]")
 
-        # make a clean directory if needed
-        if build_data.built(dpath):
-            # an older version exists, so remove these outdated files.
-            build_data.remove_dir(dpath)
-        build_data.make_dir(dpath)
+        # # make a clean directory if needed
+        # if build_data.built(dpath):
+        #     # an older version exists, so remove these outdated files.
+        #     build_data.remove_dir(dpath)
+        # build_data.make_dir(dpath)
 
         # download the data.
         fname = "redial_dataset.zip"

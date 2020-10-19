@@ -17,6 +17,19 @@ from parlai.core.utils import neginf
 from parlai.agents.kbrd.modules import KBRD
 from parlai.agents.kbrd.kbrd import _load_kg_embeddings
 
+def _load_kg_embeddings(entity2entityId, dim, embedding_path):
+    kg_embeddings = torch.zeros(len(entity2entityId), dim)
+    entityIds = [v for k, v in entity2entityId.items()]
+    with open(embedding_path, 'r') as f:
+        for line in f.readlines():
+            line = line.split('\t')
+            entity = int(line[0])
+            if entity not in entityIds:
+                continue
+            entityId = entity
+            embedding = torch.Tensor(list(map(float, line[1:])))
+            kg_embeddings[entityId] = embedding
+    return kg_embeddings
 
 def _normalize(tensor, norm_layer):
     """Broadcast layer norm"""
@@ -564,7 +577,9 @@ class TransformerGeneratorModel(TorchGeneratorModel):
         entity2entityId = pkl.load(
             open(os.path.join(opt["datapath"], "redial", "entity2entityId.pkl"), "rb")
         )
-        self.kbrd = KBRD(opt['n_entity'],opt['n_relation'],opt['dim'],opt['n_hop'],opt['kge_weight'],opt['l2_weight'],opt['n_memory'],opt['item_update_mode'],opt['using_all_hops'], kg, None, None, num_bases=8)
+        entity_kg_emb = _load_kg_embeddings(entity2entityId, opt["dim"], "/home/rajsar/TuckER/dbpedia5.txt")
+        print(entity_kg_emb.size())
+        self.kbrd = KBRD(opt['n_entity'],opt['n_relation'],opt['dim'],opt['n_hop'],opt['kge_weight'],opt['l2_weight'],opt['n_memory'],opt['item_update_mode'],opt['using_all_hops'], kg, entity_kg_emb, None, num_bases=8)
         state_dict = torch.load('saved/both_rgcn_0')['model']
         self.kbrd.load_state_dict(state_dict)
         self.user_representation_to_bias_1 = nn.Linear(opt['dim'], 512)

@@ -545,7 +545,7 @@ class DictionaryAgent(Agent):
         print('Dictionary: saving dictionary to {}'.format(filename))
 
         make_dir(os.path.dirname(filename))
-        with open(filename, 'a' if append else 'w') as write:
+        with open(filename, 'a' if append else 'w', encoding="utf-8") as write:
             for i in self.ind2tok.keys():
                 tok = self.ind2tok[i]
                 cnt = self.freq[tok]

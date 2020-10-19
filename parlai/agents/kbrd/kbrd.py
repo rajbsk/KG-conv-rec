@@ -22,13 +22,14 @@ from .modules import KBRD
 
 def _load_kg_embeddings(entity2entityId, dim, embedding_path):
     kg_embeddings = torch.zeros(len(entity2entityId), dim)
+    entityIds = [v for k, v in entity2entityId.items()]
     with open(embedding_path, 'r') as f:
         for line in f.readlines():
             line = line.split('\t')
-            entity = line[0]
-            if entity not in entity2entityId:
+            entity = int(line[0])
+            if entity not in entityIds:
                 continue
-            entityId = entity2entityId[entity]
+            entityId = entity
             embedding = torch.Tensor(list(map(float, line[1:])))
             kg_embeddings[entityId] = embedding
     return kg_embeddings
@@ -103,7 +104,6 @@ class KbrdAgent(TorchAgent):
         self.n_entity = opt["n_entity"]
         self.n_hop = opt["n_hop"]
         self.n_memory = opt["n_memory"]
-
         if not shared:
             # set up model from scratch
 
@@ -116,7 +116,7 @@ class KbrdAgent(TorchAgent):
             entity2entityId = pkl.load(
                 open(os.path.join(opt["datapath"], "redial", "entity2entityId.pkl"), "rb")
             )
-            entity_kg_emb = None
+            entity_kg_emb = _load_kg_embeddings(entity2entityId, opt["dim"], os.path.join(opt["datapath"], "redial", "entity_embedding.txt"))
             abstract_path = 'dbpedia/short_abstracts_en.ttl'
             entity_text_emb = None
 
@@ -213,6 +213,7 @@ class KbrdAgent(TorchAgent):
         if label_type is None:
             return obs
 
+        
         # mentioned movies
         input_match = list(map(int, obs['label_candidates'][1].split()))
         labels_match = list(map(int, obs['label_candidates'][2].split()))
@@ -298,9 +299,11 @@ class KbrdAgent(TorchAgent):
 
         outputs = return_dict["scores"].cpu()
         outputs = outputs[:, torch.LongTensor(self.movie_ids)]
-        _, pred_idx = torch.topk(outputs, k=100, dim=1)
+        _, pred_idx = torch.topk(outputs, k=outputs.size()[1], dim=1)
         for b in range(bs):
             target_idx = self.movie_ids.index(labels[b].item())
+            rank = (pred_idx[b] == target_idx).nonzero().tolist()[0][0]
+            self.metrics["recall@100"] += 1.0/(1+rank)
             self.metrics["recall@1"] += int(target_idx in pred_idx[b][:1].tolist())
             self.metrics["recall@10"] += int(target_idx in pred_idx[b][:10].tolist())
             self.metrics["recall@50"] += int(target_idx in pred_idx[b][:50].tolist())
@@ -313,4 +316,5 @@ class KbrdAgent(TorchAgent):
             self.counts[f"recall@1"] += 1
             self.counts[f"recall@10"] += 1
             self.counts[f"recall@50"] += 1
+            self.counts[f"recall@MRR"] += 1
 
