@@ -1,17 +1,23 @@
-# KBRD
+# KG-Conv-Rec
 
-### [arXiv](https://arxiv.org/abs/1908.05391)
+"Suggest me a movie for tonight": Leveraging Knowledge Graphs for Conversational Recommendation
+
+<!-- ### [arXiv](https://arxiv.org/abs/1908.05391) -->
 
 Towards **K**nowledge-**B**ased **R**ecommender **D**ialog System.<br>
-[Qibin Chen](https://www.qibin.ink), [Junyang Lin](https://justinlin610.github.io), Yichang Zhang, Ming Ding, [Yukuo Cen](https://sites.google.com/view/yukuocen), [Hongxia Yang](https://sites.google.com/site/hystatistics/home), [Jie Tang](http://keg.cs.tsinghua.edu.cn/jietang/).<br>
-In EMNLP-IJCNLP 2019
+[Rajdeep Sarkar](https://dsi.nuigalway.ie/people/bb4f17b35edea725a26cf3e4e62bdd229d6ab978), [Koustava Goswami](https://dsi.nuigalway.ie/people/3c152032cea339067a0d1cb991e817271a98cf2c), [Mihael Arcan](https://dsi.nuigalway.ie/people/88b498677b9bf3780bf3d5151abbc5d69112dff8), [
+John McCrae](https://dsi.nuigalway.ie/people/25cb2c4c1429e8dff2bdaa3a11fb8a5666d3872c).<br>
+In The 28th International Conference on Computational Linguistics (COLING 2020)
 
 ## Prerequisites
 
-- Linux
-- Python 3.6
-- PyTorch 1.2.0
-
+- Python==3.6
+- torch==1.3.0
+- torch-cluster==1.4.5
+- torch-geometric==1.3.2
+- torch-sparse==0.4.3
+- torchtext==0.6.0
+- torchvision==0.4.1
 ## Getting Started
 
 ### Installation
@@ -19,8 +25,8 @@ In EMNLP-IJCNLP 2019
 Clone this repo.
 
 ```bash
-git clone https://github.com/THUDM/KBRD
-cd KBRD
+git clone https://github.com/rajbsk/KG-conv-rec.git
+cd KG-conv-rec/
 ```
 
 Please install dependencies by
@@ -32,43 +38,29 @@ pip install -r requirements.txt
 ### Dataset
 
 - We use the **ReDial** dataset, which will be automatically downloaded by the script.
-- Download the refined knowledge base (dbpedia) used in this paper [[Google Drive]](https://drive.google.com/open?id=1WqRoQAxH_kdoJpbYVsFF0EN4ZJxiiDB2) [[Tsinghua Cloud]](https://cloud.tsinghua.edu.cn/f/6af126bdccc44352bfee/?dl=1). Decompress it and get the `dbpedia/` folder, which should contain two files `mappingbased_objects_en.ttl` and `short_abstracts_en.ttl`.
-- Download the proprocessed extracted entities set [[Google Drive]](https://drive.google.com/open?id=1OG-kNIeUi3i0UDNhJVMEnia9JeRAHVXB) [[Tsinghua Cloud]](https://cloud.tsinghua.edu.cn/f/88ac4b7eab6c416ca74f/?dl=1) and put it under `<path/to/KBRD/data/redial/`.
+- The models and the dataset used in this work are stored in google drive. Download data.zip from [Google Drive]() and extract inside the KG-conv-rec folder.
 
 ### Training
 
 To train the recommender part, run:
 
 ```bash
-bash scripts/both.sh <num_exps> <gpu_id>
-bash scripts/baseline.sh <num_exps> <gpu_id>
+bash scripts/both.sh <dataset> <num_exps> <gpu_id>
 ```
-
-To train the dialog part, run:
-
-```bash
-bash scripts/t2t_rec_rgcn.sh <num_exps> <gpu_id>
-```
+Where dataset takes values 2_hop, 3_hop, 5_hop, pr, pr_0.7, pr_0.9 for the models build using subgraphs constructed using 2 hop, 3 hop, 5hop, PageRank, Personalized PageRank(alpha=0.7), Personalized PageRank(alpha=0.9) respectively. num_exps is the number of experiments and gpu_id is the id pf the gpu you want to run your code on.
 
 ### Logging
 
 TensorBoard logs and models will be saved in `saved/` folder.
-
-### Evaluation
-
-- `show_bias.py` is used to show the vocabulary bias of a specific movie (like in Table 4)
-
-If you have difficulties to get things working in the above steps, please let us know.
 
 ## Cite
 
 Please cite our paper if you use this code in your own work:
 
 ```
-@article{chen2019towards,
-  title={Towards Knowledge-Based Recommender Dialog System},
-  author={Chen, Qibin and Lin, Junyang and Zhang, Yichang and Ding, Ming and Cen, Yukuo and Yang, Hongxia and Tang, Jie},
-  journal={arXiv preprint arXiv:1908.05391},
-  year={2019}
+@article{sarkar2020kgrec,
+  title={"Suggest me a movie for tonight": Leveraging Knowledge Graphs for Conversational Recommendation},
+  author={Sarkar, R., Goswami, K., Arcan, M., McCrae, J.P.},
+  year={2020}
 }
 ```
