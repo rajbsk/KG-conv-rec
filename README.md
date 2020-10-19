@@ -4,7 +4,6 @@
 
 <!-- ### [arXiv](https://arxiv.org/abs/1908.05391) -->
 
-Towards **K**nowledge-**B**ased **R**ecommender **D**ialog System.<br>
 [Rajdeep Sarkar](https://dsi.nuigalway.ie/people/bb4f17b35edea725a26cf3e4e62bdd229d6ab978), [Koustava Goswami](https://dsi.nuigalway.ie/people/3c152032cea339067a0d1cb991e817271a98cf2c), [Mihael Arcan](https://dsi.nuigalway.ie/people/88b498677b9bf3780bf3d5151abbc5d69112dff8), [
 John McCrae](https://dsi.nuigalway.ie/people/25cb2c4c1429e8dff2bdaa3a11fb8a5666d3872c).<br>
 In The 28th International Conference on Computational Linguistics (COLING 2020)
