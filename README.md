@@ -44,9 +44,9 @@ pip install -r requirements.txt
 To train the recommender part, run:
 
 ```bash
-bash scripts/both.sh <dataset> <num_exps> <gpu_id>
+bash scripts/both.sh <subgraph_model_name> <num_exps> <gpu_id>
 ```
-Where dataset takes values 2_hop, 3_hop, 5_hop, pr, pr_0.7, pr_0.9 for the models build using subgraphs constructed using 2 hop, 3 hop, 5hop, PageRank, Personalized PageRank(alpha=0.7), Personalized PageRank(alpha=0.9) respectively. num_exps is the number of experiments and gpu_id is the id pf the gpu you want to run your code on.
+Where subgraph_model_name takes values 2_hop, 3_hop, 5_hop, pr, pr_0.7, pr_0.9 for the models build using subgraphs constructed using 2 hop, 3 hop, 5hop, PageRank, Personalized PageRank(alpha=0.7), Personalized PageRank(alpha=0.9) respectively. num_exps is the number of experiments and gpu_id is the id pf the gpu you want to run your code on.
 
 ### Logging
 
