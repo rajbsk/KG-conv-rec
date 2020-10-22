@@ -59,7 +59,10 @@ Please cite our paper if you use this code in your own work:
 ```
 @article{sarkar2020kgrec,
   title={"Suggest me a movie for tonight": Leveraging Knowledge Graphs for Conversational Recommendation},
-  author={Sarkar, R., Goswami, K., Arcan, M., McCrae, J.P.},
+  author={Rajdeep Sarkar and Koustava Goswami and Mihael Arcan and John McCrae},
+  booktitle = {Proceedings of the 28th International Conference on Computational
+               Linguistics, {COLING} 2020, Barcelona, Spain, December 8-11,
+               2020},
   year={2020}
 }
 ```
