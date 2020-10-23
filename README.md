@@ -37,7 +37,7 @@ pip install -r requirements.txt
 ### Dataset
 
 - We use the **ReDial** dataset, which will be automatically downloaded by the script.
-- The models and the dataset used in this work are stored in google drive. Download data.zip from [Google Drive]() and extract inside the KG-conv-rec folder.
+- The models and the dataset used in this work are stored in google drive. Download data.zip from [Google Drive](https://drive.google.com/file/d/106M7yiyy7ixxMCn00pS-IVnVY3aSq8B6/view?usp=sharing) and extract inside the KG-conv-rec folder.
 
 ### Training
 
