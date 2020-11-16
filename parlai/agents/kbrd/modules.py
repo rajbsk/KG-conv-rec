@@ -218,7 +218,7 @@ class KBRD(nn.Module):
                 user_representation = (torch.zeros(1, self.dim).cuda())
             else:
                 user_representation = (nodes_features[seed_set])
-            # user_representation = self.positional_encoding(user_representation)
+            user_representation = self.positional_encoding(user_representation)
             user_representation = self.soft_attention(user_representation)
             user_representation_list.append(user_representation)
         return torch.stack(user_representation_list), nodes_features
