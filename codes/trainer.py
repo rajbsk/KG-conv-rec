@@ -10,6 +10,7 @@ from torch import nn
 from torch.nn import functional as F
 import nltk
 from tqdm import tqdm
+from parlai.utils.misc import round_sigfigs
 
 from KG_conv_rec_model import KGCR
 from utils import _load_kg_embeddings
@@ -41,12 +42,11 @@ class KGCRTrainer():
         Note that this includes predicting __END__ and __UNK__ tokens and may
         differ from a truly independent measurement.
         """
-        base = super().report()
         m = {}
         m["num_tokens"] = self.counts["num_tokens"]
-        m["num_batches"] = self.counts["num_batches"]
-        m["loss"] = self.metrics["loss"] / m["num_batches"]
-        m["base_loss"] = self.metrics["base_loss"] / m["num_batches"]
+        # m["num_batches"] = self.counts["num_batches"]
+        # m["loss"] = self.metrics["loss"] / m["num_batches"]
+        # m["base_loss"] = self.metrics["base_loss"] / m["num_batches"]
         m["acc"] = self.metrics["acc"] / m["num_tokens"]
         m["auc"] = self.metrics["auc"] / m["num_tokens"]
         # Top-k recommendation Recall
@@ -56,8 +56,8 @@ class KGCRTrainer():
                 m["num_tokens_" + x] = self.counts[x]
         for k, v in m.items():
             # clean up: rounds to sigfigs and converts tensors to floats
-            base[k] = round_sigfigs(v, 4)
-        return base
+            m[k] = round_sigfigs(v, 4)
+        return m
 
     def reset_metrics(self):
         for key in self.metrics:
@@ -102,7 +102,9 @@ class KGCRTrainer():
 
         self.metrics["base_loss"] += return_dict["base_loss"].item()
         self.metrics["loss"] += loss.item()
+        
         self.counts["num_batches"] += 1
+        self.counts["num_tokens"] += bs
 
         outputs = return_dict["scores"].cpu()
         outputs = outputs[:, torch.LongTensor(self.movie_ids)]
@@ -110,7 +112,7 @@ class KGCRTrainer():
         for b in range(bs):
             target_idx = self.movie_ids.index(labels[b].item())
             rank = (pred_idx[b] == target_idx).nonzero().tolist()[0][0]
-            self.metrics["recall@100"] += 1.0/(1+rank)
+            self.metrics["recall@MRR"] += 1.0/(1+rank)
             self.metrics["recall@1"] += int(target_idx in pred_idx[b][:1].tolist())
             self.metrics["recall@10"] += int(target_idx in pred_idx[b][:10].tolist())
             self.metrics["recall@50"] += int(target_idx in pred_idx[b][:50].tolist())
@@ -134,7 +136,7 @@ class KGCRTrainer():
             batch_loss = self.eval_step(batch)
             total_loss += batch_loss
         print("Evaluation Loss: %f"%(total_loss))
-
+        print(self.report())
         return total_loss
     
     def train_model(self, trainDataLoader, devDataLoader):

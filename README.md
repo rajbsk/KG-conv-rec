@@ -36,7 +36,12 @@ pip install -r requirements.txt
 
 ### Dataset
 
-- We use the **ReDial** dataset, which will be automatically downloaded by the script.
+- We use the **ReDial** dataset, which is split into train, development and test dataset.
+- Create a folder named dataset and folder named models.
+```bash
+mkdir dataset
+mkdir models
+```
 - The models and the dataset used in this work are stored in google drive. Download data.zip from [Google Drive](https://drive.google.com/file/d/106M7yiyy7ixxMCn00pS-IVnVY3aSq8B6/view?usp=sharing) and extract inside the KG-conv-rec folder.
 
 ### Training
@@ -44,7 +49,8 @@ pip install -r requirements.txt
 To train the recommender part, run:
 
 ```bash
-bash scripts/both.sh <subgraph_model_name> <num_exps> <gpu_id>
+cd codes
+python3 main_KG_conv_rec.py  <subgraph_model_name> <gpu_id>
 ```
 Where subgraph_model_name takes values 2_hop, 3_hop, 5_hop, pr, pr_0.7, pr_0.9 for the models build using subgraphs constructed using 2 hop, 3 hop, 5hop, PageRank, Personalized PageRank(alpha=0.7), Personalized PageRank(alpha=0.9) respectively. num_exps is the number of experiments and gpu_id is the id pf the gpu you want to run your code on.
 
