@@ -17,6 +17,9 @@ __pycache__/
 .Python
 .vector_cache/
 env/
+parlai/
+scripts/
+conversational-recommendations/
 build/
 data/
 data

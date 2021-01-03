@@ -21,6 +21,7 @@ class KGCRTrainer():
         self.device = opt["device"]
         self.entity2entityId = opt["entity2entityId"]
         self.epochs = opt["epoch"]
+        self.movie_ids = opt["movie_ids"]
         entity_kg_emb = _load_kg_embeddings(self.entity2entityId, opt["dim"], opt["entity_embeddings"])
 
         # encoder captures the input text
@@ -90,12 +91,10 @@ class KGCRTrainer():
 
     def eval_step(self, batch):
         self.model.eval()
-        bs = (batch.label_vec == 1).sum().item()
-        labels = torch.zeros(bs, dtype=torch.long)
 
-        # create subgraph for propagation
         bs = len(batch)
         entities, labels = self.process_batch(batch)
+        turns = [len(turn) for turn in entities]
 
         return_dict = self.model(entities, labels)
 
@@ -103,7 +102,6 @@ class KGCRTrainer():
 
         self.metrics["base_loss"] += return_dict["base_loss"].item()
         self.metrics["loss"] += loss.item()
-        self.counts["num_tokens"] += bs
         self.counts["num_batches"] += 1
 
         outputs = return_dict["scores"].cpu()
@@ -126,15 +124,17 @@ class KGCRTrainer():
             self.counts[f"recall@10"] += 1
             self.counts[f"recall@50"] += 1
             self.counts[f"recall@MRR"] += 1
+
+        return loss.item()
     
     def evaluate_model(self, dataLoader):
         self.reset_metrics()
         total_loss = 0
         for batch in dataLoader:
-            batch_loss = self.eval_step(batch, train=False)
+            batch_loss = self.eval_step(batch)
             total_loss += batch_loss
         print("Evaluation Loss: %f"%(total_loss))
-        
+
         return total_loss
     
     def train_model(self, trainDataLoader, devDataLoader):
@@ -151,15 +151,15 @@ class KGCRTrainer():
             print("Iteration: %d,Train Loss = %f" %(epoch, train_loss))
             
             # Logging parameters
-            p = list(self.named_parameters())
+            p = list(self.model.named_parameters())
             logger.scalar_summary("Train Loss", train_loss, ins+1)
             logger.scalar_summary("Dev Loss", dev_loss, ins+1)
-            for tag, value in self.named_parameters():
+            for tag, value in self.model.named_parameters():
                 tag = tag.replace('.', '/')
                 logger.histo_summary(tag, value.data.cpu().numpy(), ins+1)
                 if value.grad != None:
                     logger.histo_summary(tag+'/grad', value.grad.data.cpu().numpy(), ins+1)
             ins+=1
-            if (epoch+1)%self.save_every==0:
+            if (epoch+1)%20==0:
                 torch.save(self.state_dict(), self.model_directory+self.model_name+"_"+str(epoch+1))
 

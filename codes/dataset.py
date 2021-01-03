@@ -31,6 +31,7 @@ class KGCRDataset(Dataset):
         self.entity2entityId = load_pickle_file(opt["entity2entityId"])
         self.relation2relationId = load_pickle_file(opt["relation2relationId"])
         self.dataset = load_pickle_file(opt["dataset"])
+        self.movie_ids = load_pickle_file(opt["movie_ids"])
 
     def __len__(self):
         return len(self.dataset)
