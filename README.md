@@ -8,6 +8,7 @@
 John McCrae](https://dsi.nuigalway.ie/people/25cb2c4c1429e8dff2bdaa3a11fb8a5666d3872c).<br>
 In The 28th International Conference on Computational Linguistics (COLING 2020)
 
+Please use the "dual" branch for codes tested on top of KBRD task code.
 ## Prerequisites
 
 - Python==3.6
