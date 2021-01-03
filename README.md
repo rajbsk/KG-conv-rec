@@ -50,9 +50,9 @@ To train the recommender part, run:
 
 ```bash
 cd codes
-python3 main_KG_conv_rec.py  <subgraph_model_name> <gpu_id>
+python3 main_KG_conv_rec.py  <subgraph_data> <gpu_id>
 ```
-Where subgraph_model_name takes values 2_hop, 3_hop, 5_hop, pr, pr_0.7, pr_0.9 for the models build using subgraphs constructed using 2 hop, 3 hop, 5hop, PageRank, Personalized PageRank(alpha=0.7), Personalized PageRank(alpha=0.9) respectively. num_exps is the number of experiments and gpu_id is the id pf the gpu you want to run your code on.
+Where subgraph_data takes values data_2, data_3, data_5, data_pp, data_pp7, data_pp9 for the models build using subgraphs constructed using 2 hop, 3 hop, 5hop, PageRank, Personalized PageRank(alpha=0.7), Personalized PageRank(alpha=0.9) respectively. gpu_id is the id of the  gpu you want to run your code on.
 
 ### Logging
 

@@ -18,11 +18,16 @@ from tensorboardX import SummaryWriter
 from dataset import KGCRDataset, ToTensor, pad_collate_entities
 from trainer import KGCRTrainer
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+subgraph_data = sys.argv[1]
+gpu_id = sys.argv[2]
+print(subgraph_data)
+print(gpu_id)
+
+os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def main():
-    data_directory = "../dataset/data_2/redial/"
+    data_directory = "../dataset/"+subgraph_data+"/redial/"
     opt_dataset_train = {"entity2entityId": data_directory+"entity2entityId.pkl", "relation2relationId": data_directory+"relation2relationId.pkl",
                     "id2entity": data_directory+"id2entity.pkl", "text_dict": data_directory+"text_dict.pkl", "kg": data_directory+"subkg.pkl",
                     "dataset": data_directory+"dataset_train.pkl", "knowledge_graph": data_directory+"opendialkg_triples.txt",
