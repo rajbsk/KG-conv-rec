@@ -48,7 +48,7 @@ def main():
 
     opt_model = {"n_entity": len(KGCR_dataset_train.entity2entityId), "n_relation": len(KGCR_dataset_train.relation2relationId), 
                 "entity_embeddings": data_directory+"entity_embedding.txt", "dim": 300, "batch_size":32, "device": device, "lr": 1e-3,
-                "epoch": 10, "model_directory": "../saved/models/", "model_name": "KGCR", "entity2entityId": KGCR_dataset_train.entity2entityId,
+                "epoch": 3, "model_directory": "../saved/models/", "model_name": "KGCR", "entity2entityId": KGCR_dataset_train.entity2entityId,
                 "entity_embeddings": data_directory+"entity_embedding.txt", "movie_ids": KGCR_dataset_train.movie_ids}
 
     print(len(KGCR_dataset_train))
